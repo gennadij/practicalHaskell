@@ -1,5 +1,5 @@
-module DataTypes.DataTypes where
-import Control.Monad.Identity (Identity)
+module DataTypes.DataTypes (Client (..), Person (..), ClientR (..), PersonR (..)) where
+
 type ClientName = String 
 type IdNumber = Integer
 type Position = String
@@ -19,3 +19,15 @@ type TMName = String
 type Price = Double  
 
 data TimeMachine = TimeMachine Manufacturer Model TMName Price deriving Show
+
+data ClientR = GovOrgR     {   clientRName :: String     }
+
+             | CompanyR    {   clientRName :: String
+                             , companyRId  :: Integer
+                             , personR     :: PersonR
+                             , positionR   :: String     }
+
+             | IndividualR {   personR      :: PersonR    } deriving Show
+
+data PersonR = PersonR     {   fNameR       :: String
+                             , lNameR       :: String     } deriving Show
