@@ -67,13 +67,16 @@ threeCoins = do
 -- RPM Calculator
 
 rpn1 :: String -> Double  
-rpn1 = head . foldl foldingFunction1 [] . words 
+rpn1 = head . foldl foldingFunction1 [] . words
 
 foldingFunction1 :: [Double] -> String -> [Double]  
 foldingFunction1 (x:y:ys) "*" = (x * y):ys  
 foldingFunction1 (x:y:ys) "+" = (x + y):ys  
 foldingFunction1 (x:y:ys) "-" = (y - x):ys  
 foldingFunction1 xs numberString = read numberString:xs 
+
+foldingTest :: [Double] -> String -> [Double]
+foldingTest dList st = read st:dList
 
 rpn :: String -> Maybe Double 
 rpn st = do
