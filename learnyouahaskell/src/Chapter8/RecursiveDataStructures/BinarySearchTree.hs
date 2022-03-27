@@ -12,6 +12,7 @@ treeInsert x (Node a left right)
   | x == a = Node x left right
   | x <  a = Node x (treeInsert x left) right
   | x >  a = Node x left (treeInsert x right)
+  | otherwise = singelton x
 
 treeElem :: (Ord a) => a -> Tree a -> Bool
 treeElem x emptyTree = False 
