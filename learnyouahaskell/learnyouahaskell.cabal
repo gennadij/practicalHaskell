@@ -27,6 +27,7 @@ library
   exposed-modules:
       Chapter8.RecursiveDataStructures.BinarySearchTree
       Chapter8.Typeclasses102.Examples
+      Chapter8.Typeclasses102.FunctorTypeClass
       Chapter8.Typeclasses102.TrafficLight
       Chapter8.Typeclasses102.YesNo
       Lib

@@ -1,5 +1,6 @@
 module Chapter8.Typeclasses102.YesNo where
 import Chapter8.Typeclasses102.TrafficLight (TrafficLight (..))
+import Chapter8.RecursiveDataStructures.BinarySearchTree (Tree (..))
 class YesNo a where 
   yesno :: a -> Bool 
 
@@ -22,6 +23,11 @@ instance YesNo TrafficLight where
   yesno R = False 
   yesno _ = True
 
+instance YesNo (Tree a) where 
+  yesno EmptyTree = False 
+  yesno _ = True
+
 yesNoIf :: (YesNo y) => y -> a -> a -> a
 yesNoIf yesnoVal yesRes noRes = 
   if yesno yesnoVal then yesRes else noRes
+
