@@ -8,17 +8,20 @@ singelton x = Node x EmptyTree EmptyTree
 
 treeInsert :: (Ord a) => a -> Tree a -> Tree a
 treeInsert x EmptyTree = singelton x
-treeInsert x (Node a left right) 
+treeInsert x (Node a left right)
   | x == a = Node x left right
   | x <  a = Node x (treeInsert x left) right
   | x >  a = Node x left (treeInsert x right)
+  | otherwise = EmptyTree
 
-treeElem :: (Ord a) => a -> Tree a -> Bool
-treeElem x emptyTree = False 
-treeElem x (Node a left right) 
+treeElem :: (Ord a) => a -> Tree a -> Bool 
+treeElem x EmptyTree = False
+treeElem x (Node a left right)
   | x == a = True 
   | x <  a = treeElem x left 
   | x >  a = treeElem x right
+  | otherwise = False
+
 
 data Tree1 a = Empty
              | Leaf a
