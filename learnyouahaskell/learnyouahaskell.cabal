@@ -30,6 +30,7 @@ library
       Chapter8.Typeclasses102.FunctorTypeClass
       Chapter8.Typeclasses102.TrafficLight
       Chapter8.Typeclasses102.YesNo
+      Chapter9.FilesAndStrimes.FilesAndStrimes
       Lib
   other-modules:
       Paths_learnyouahaskell
