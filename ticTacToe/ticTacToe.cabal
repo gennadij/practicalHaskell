@@ -34,6 +34,7 @@ library
   build-depends:
       array
     , base >=4.7 && <5
+    , mtl
     , random
   default-language: Haskell2010
 
@@ -47,6 +48,7 @@ executable ticTacToe-exe
   build-depends:
       array
     , base >=4.7 && <5
+    , mtl
     , random
     , ticTacToe
   default-language: Haskell2010
@@ -62,6 +64,7 @@ test-suite ticTacToe-test
   build-depends:
       array
     , base >=4.7 && <5
+    , mtl
     , random
     , ticTacToe
   default-language: Haskell2010
