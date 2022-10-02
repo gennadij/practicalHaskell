@@ -2,7 +2,8 @@ module GreaterThan (
     People (..), 
     Car (..), 
     initCars, 
-    initPeople
+    initPeople,
+    olderThan
 ) where
 
 data People = P {
@@ -42,3 +43,6 @@ initPeople = [
     P "Artiom" "male" 80,
     P "Aljona" "female" 90
   ]
+
+olderThan :: Int -> Int -> Bool
+olderThan a b = a > b
