@@ -32,3 +32,25 @@ ifEvenDouble = ifEven double
 
 ifEvenSquare :: Integer -> Integer
 ifEvenSquare = ifEven square
+
+-- Lesson 8
+
+myTake :: (Num n, Eq n) => n -> [a] -> [a]
+myTake _ [] = []
+myTake 0 _  = []
+myTake n (x:xs) = x:rest
+  where rest = myTake (n - 1) xs
+
+--Lesson 10
+
+cup :: Int -> (Int -> Int) -> Int
+cup mililiter = \m -> m mililiter
+
+getMililiter :: ((Int -> Int) -> Int) -> Int
+getMililiter aCup = aCup (\ml -> ml)
+
+drink :: ((Int -> Int) -> Int) -> Int -> ((Int -> Int) -> Int)
+drink aCup mlDrank = cup (mililiter - mlDrank)
+  where mililiter = getMililiter aCup
+
+robot (name, attack, hp) = \f -> f (name, attack, hp)
