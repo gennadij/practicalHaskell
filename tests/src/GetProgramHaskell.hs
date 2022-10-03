@@ -46,11 +46,35 @@ myTake n (x:xs) = x:rest
 cup :: Int -> (Int -> Int) -> Int
 cup mililiter = \m -> m mililiter
 
+fMililiter :: Int -> Int
+fMililiter n = n
+
 getMililiter :: ((Int -> Int) -> Int) -> Int
-getMililiter aCup = aCup (\ml -> ml)
+getMililiter aCup = aCup fMililiter
 
 drink :: ((Int -> Int) -> Int) -> Int -> ((Int -> Int) -> Int)
 drink aCup mlDrank = cup (mililiter - mlDrank)
   where mililiter = getMililiter aCup
 
+type TRobot = ([Char], Int, Int)
+
+robot :: TRobot -> (TRobot -> t) -> t 
 robot (name, attack, hp) = \f -> f (name, attack, hp)
+
+name :: TRobot -> [Char]
+name (n, _, _) = n
+
+attack :: TRobot -> Int
+attack (_, a, _) = a
+
+hp :: TRobot -> Int
+hp (_, _, hp) = hp
+
+getName :: ((TRobot -> [Char]) -> [Char]) -> [Char]
+getName aRobot = aRobot name
+
+getAttack :: ((TRobot -> Int) -> Int) -> Int
+getAttack aRobot = aRobot attack
+
+getHP :: ((TRobot -> Int) -> Int) -> Int
+getHP aRobot = aRobot hp
