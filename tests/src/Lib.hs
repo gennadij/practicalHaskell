@@ -1,5 +1,7 @@
 module Lib
-    ( someFunc
+    ( 
+      someFunc,
+      runRobotBattle
     ) where
 
 import Control.Monad.Writer
@@ -7,6 +9,7 @@ import System.Random
 import Control.Monad.State
 import Control.Monad.Error
 import Data.List
+import GetProgramHaskell
 
 someFunc :: IO ()
 someFunc = mapM_ putStrLn  $ snd$ runWriter (gcd' 78 24)
@@ -93,3 +96,13 @@ foldingFunction (x:y:ys) "+" = return ((x + y ) : ys)
 foldingFunction (x:y:ys) "*" = return ((x * y ) : ys)
 foldingFunction (x:y:ys) "-" = return((x - y ) : ys)
 foldingFunction xs numberString = liftM (:xs) (readMaybe numberString)
+
+runRobotBattle :: IO ()
+runRobotBattle = do
+  let killerRobot = robot ("Killer", 25, 200)
+  let speedRobot = robot ("Speed", 20, 200)
+  let softRobot = robot ("Soft", 15, 200)
+  let printer = printRobot killerRobot
+  -- printRobot speedRobot
+  -- printRobot softRobot
+  putStrLn "END"

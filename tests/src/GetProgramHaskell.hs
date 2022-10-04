@@ -1,4 +1,6 @@
-module GetProgramHaskell () where
+module GetProgramHaskell (
+  robot, printRobot
+) where
 
 -- Lesson 5
 getRequestUrl host apiKey resource id = 
@@ -78,3 +80,12 @@ getAttack aRobot = aRobot attack
 
 getHP :: ((TRobot -> Int) -> Int) -> Int
 getHP aRobot = aRobot hp
+
+setName aRobot newName = aRobot (\(n, a, h) -> robot (newName, a, h))
+
+setAttack aRobot newAttack = aRobot (\(n, a, h) -> robot (n, newAttack, h))
+
+setHP aRobot newHP = aRobot (\(n, a, h) -> robot (n, a, newHP))
+
+printRobot aRobot = (\(n, a, h) -> 
+  putStrLn (n ++ " attack: " ++ (show a) ++ " hp: " ++ (show h)))
