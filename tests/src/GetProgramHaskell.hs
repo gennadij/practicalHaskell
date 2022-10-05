@@ -1,5 +1,5 @@
 module GetProgramHaskell (
-  robot, printRobot
+  robot, printRobot, damage,fight
 ) where
 
 -- Lesson 5
@@ -87,5 +87,13 @@ setAttack aRobot newAttack = aRobot (\(n, a, h) -> robot (n, newAttack, h))
 
 setHP aRobot newHP = aRobot (\(n, a, h) -> robot (n, a, newHP))
 
-printRobot aRobot = (\(n, a, h) -> 
-  putStrLn (n ++ " attack: " ++ (show a) ++ " hp: " ++ (show h)))
+printRobot aRobot = aRobot(\(n, a, h) -> 
+  n ++ " attack: " ++ (show a) ++ " hp: " ++ (show h))
+
+damage aRobot attackDamage = aRobot (\(n, a, h) -> 
+  robot (n, a, h - attackDamage))
+
+fight aRobot defender = damage defender attack
+  where attack = if getHP aRobot > 10 
+                 then getAttack aRobot
+                 else 0

@@ -102,7 +102,15 @@ runRobotBattle = do
   let killerRobot = robot ("Killer", 25, 200)
   let speedRobot = robot ("Speed", 20, 200)
   let softRobot = robot ("Soft", 15, 200)
-  let printer = printRobot killerRobot
-  -- printRobot speedRobot
-  -- printRobot softRobot
+  putStrLn (printRobot killerRobot)
+  putStrLn (printRobot speedRobot)
+  putStrLn (printRobot softRobot)
+  let r1 = fight killerRobot speedRobot
+  let r2 = fight speedRobot killerRobot
+  let r3 = fight r1 r2
+  let r4 = fight r2 r1
+  let r5 = fight r3 r4
+  let r6 = fight r4 r3
+  putStrLn (printRobot r5)
+  putStrLn (printRobot r6) 
   putStrLn "END"
