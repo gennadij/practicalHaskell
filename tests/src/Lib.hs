@@ -10,6 +10,7 @@ import Control.Monad.State
 import Control.Monad.Error
 import Data.List
 import GetProgramHaskell
+import GetProgramHaskell (printRobot)
 
 someFunc :: IO ()
 someFunc = mapM_ putStrLn  $ snd$ runWriter (gcd' 78 24)
@@ -113,4 +114,18 @@ runRobotBattle = do
   let r6 = fight r4 r3
   putStrLn (printRobot r5)
   putStrLn (printRobot r6) 
+
+  let fastRobot = robot ("speedy", 15, 40)
+  let  slowRobot = robot ("slowpoke",20,30)
+
+  let fastRobotRound1 = fight slowRobot fastRobot
+  let slowRobotRound1 = fight fastRobot slowRobot
+  let fastRobotRound2 = fight slowRobotRound1 fastRobotRound1
+  let slowRobotRound2 = fight fastRobotRound1 slowRobotRound1
+  let fastRobotRound3 = fight slowRobotRound2 fastRobotRound2
+  let slowRobotRound3 = fight fastRobotRound2 slowRobotRound2
+
+  putStrLn (printRobot fastRobotRound3)
+  putStrLn (printRobot slowRobotRound3)
+  
   putStrLn "END"

@@ -10,10 +10,10 @@ someFunc = do
     let cars = initCars
 
     let olderThan42 = olderThan 42
-    let peoplesOlder42 = filter (\p -> olderThan42 (p_age p)) people
+    let peoplesOlder42 = filter (olderThan42 . p_age ) people
     let peoplesNameOlder42 = map p_name peoplesOlder42
-    print (peoplesNameOlder42)
+    print peoplesNameOlder42
 
-    let carsOlder42 = filter (\p -> olderThan42 (c_age p)) cars
+    let carsOlder42 = filter (olderThan42 . c_age) cars
     let carsNameOlder42 = map c_name carsOlder42
-    print (carsNameOlder42)
+    print carsNameOlder42
