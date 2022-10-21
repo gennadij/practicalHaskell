@@ -1,6 +1,9 @@
 module Main where
 
-import Lib (runRobotBattle)
+import Lib (runRobotBattle, runTS)
 
 main :: IO ()
-main = runRobotBattle
+main = do 
+    runRobotBattle
+    putStrLn "============================================"
+    runTS

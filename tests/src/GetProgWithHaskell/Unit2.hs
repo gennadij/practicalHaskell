@@ -1,4 +1,4 @@
-module GetProgramHaskell (
+module GetProgWithHaskell.Unit2 (
   robot, printRobot, damage,fight
 ) where
 

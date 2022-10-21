@@ -1,7 +1,8 @@
 module Lib
     ( 
       someFunc,
-      runRobotBattle
+      runRobotBattle,
+      runTS
     ) where
 
 import Control.Monad.Writer
@@ -9,8 +10,8 @@ import System.Random
 import Control.Monad.State
 import Control.Monad.Error
 import Data.List
-import GetProgramHaskell
-import GetProgramHaskell (printRobot)
+import GetProgWithHaskell.Unit2 
+import GetProgWithHaskell.Unit3
 
 someFunc :: IO ()
 someFunc = mapM_ putStrLn  $ snd$ runWriter (gcd' 78 24)
@@ -129,3 +130,9 @@ runRobotBattle = do
   putStrLn (printRobot slowRobotRound3)
   
   putStrLn "END"
+
+runTS :: IO ()
+runTS = do 
+  print (fileToTS file1)
+  putStrLn "END" 
+
