@@ -4,6 +4,6 @@ import Lib (runRobotBattle, runTS)
 
 main :: IO ()
 main = do 
-    runRobotBattle
+    -- runRobotBattle
     putStrLn "============================================"
     runTS

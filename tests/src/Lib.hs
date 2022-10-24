@@ -133,6 +133,16 @@ runRobotBattle = do
 
 runTS :: IO ()
 runTS = do 
-  print (fileToTS file1)
+  let ts1 = fileToTS file1
+  let ts2 = fileToTS file2
+  let ts3 = fileToTS file3
+  let ts4 = fileToTS file4
+
+  let tsAll = ts1 <> ts2 <> ts3 <> ts4
+
+  print tsAll
+
   putStrLn "END" 
+
+
 

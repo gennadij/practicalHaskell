@@ -71,8 +71,38 @@ fileToTS tvPairs = createTS times values
 
 showTVPairs :: Show a => Int -> Maybe a -> String
 showTVPairs time (Just value) = mconcat ["| ", show time, " | ", show value, " |\n"]
-showTVPairs time Nothing = mconcat ["| ", show time, " | ", "NA, |\n"]
+showTVPairs time Nothing = mconcat ["| ", show time, " | ", "NA |\n"]
 
 instance Show a => Show (TS a) where
   show (TS times values) = mconcat rows 
     where rows = zipWith showTVPairs times values
+
+insertMaybePair :: Ord k => Map.Map k v -> (k, Maybe v) -> Map.Map k v
+insertMaybePair m (_, Nothing) = m
+insertMaybePair m (key, Just value) = Map.insert key value m
+
+combineTS :: TS a -> TS a -> TS a
+combineTS (TS [] []) ts2 = ts2
+combineTS ts1 (TS [] []) = ts1
+combineTS (TS t1 v1) (TS t2 v2) = TS completeTimes combinedValues
+  where bothTimes      = mconcat [t1, t2]
+        completeTimes  = [minimum  bothTimes .. maximum bothTimes]
+        tvMap          = foldl insertMaybePair Map.empty (zip t1 v1)
+        updateMap      = foldl insertMaybePair tvMap (zip t2 v2)
+        combinedValues = map (\v -> Map.lookup v updateMap) completeTimes
+
+instance Semigroup (TS a) where 
+  (<>) = combineTS
+
+tsToMap :: TS a -> Map.Map Int a
+tsToMap (TS teams values) = foldl insertMaybePair Map.empty (zip teams values)
+
+
+isNothingValue :: Maybe v -> Bool 
+isNothingValue (Just v) = False
+isNothingValue Nothing = True
+
+filterTSNothing :: TS a -> TS a
+filterTSNothing (TS key value) = undefined
+--  where filterValues m =  Map.delete k (Map k a)
+           
