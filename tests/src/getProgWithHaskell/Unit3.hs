@@ -5,7 +5,7 @@ module GetProgWithHaskell.Unit3 (
   file2,
   file3,
   file4,
-  TS (..)
+  minTS, maxTS
 ) where
 
 import qualified Data.Map as Map
@@ -114,6 +114,32 @@ meanTS (TS teams values) = if all (== Nothing) values
   where justVals  = filter isJust values
         cleanVals = map fromJust justVals
         avg       = mean cleanVals
+
+type CompareFunc a = a -> a -> a
+type TSCompareFunc a = (Int, Maybe a) -> (Int, Maybe a) -> (Int, Maybe a)
+
+makeTSCompare :: Eq a => CompareFunc a -> TSCompareFunc a
+makeTSCompare f = newF
+  where newF (i1, Nothing) (i2, Nothing) = (i1, Nothing)
+        newF (_,  Nothing) (i,      val) = (i,      val)
+        newF (i,      val) (_,  Nothing) = (i,      val)
+        newF (i1, Just v1) (i2, Just v2) = if f v1 v2 == v1
+                                             then (i1, Just v1)
+                                             else (i2, Just v2) 
+
+compareTS :: Eq a => (a -> a -> a) -> TS a -> Maybe (Int, Maybe a)
+compareTS f (TS [] [])        = Nothing
+compareTS f (TS times values) = if all (== Nothing) values
+                                then Nothing
+                                else Just best
+  where pairs = zip times values
+        best  = foldl (makeTSCompare f) (0, Nothing) pairs
+
+minTS :: Ord a => TS a -> Maybe (Int, Maybe a)
+minTS = compareTS min
+
+maxTS :: Ord a => TS a -> Maybe (Int, Maybe a)
+maxTS = compareTS max
 
 isNothingValue :: Maybe v -> Bool 
 isNothingValue (Just v) = False
