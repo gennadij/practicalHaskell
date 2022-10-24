@@ -138,9 +138,18 @@ runTS = do
   let ts3 = fileToTS file3
   let ts4 = fileToTS file4
 
-  let tsAll = ts1 <> ts2 <> ts3 <> ts4
+  let tsAll_1 = ts1 <> ts2 <> ts3 <> ts4
+  let tsAll_2 = mconcat [ts1, ts2, ts3, ts4]
+ 
+  print tsAll_1
 
-  print tsAll
+  print tsAll_2
+  
+  let mean = meanTS tsAll_1
+
+  print mean
+  print (meanTS tsAll_1)
+  print (meanTS tsAll_2) 
 
   putStrLn "END" 
 
