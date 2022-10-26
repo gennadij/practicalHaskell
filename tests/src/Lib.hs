@@ -12,6 +12,8 @@ import Control.Monad.Error
 import Data.List
 import GetProgWithHaskell.Unit2 
 import GetProgWithHaskell.Unit3
+import Data.Maybe (fromJust)
+
 
 someFunc :: IO ()
 someFunc = mapM_ putStrLn  $ snd$ runWriter (gcd' 78 24)
@@ -140,10 +142,14 @@ runTS = do
 
   let tsAll_1 = ts1 <> ts2 <> ts3 <> ts4
  
+
+  print "All Times Values" 
   print tsAll_1
-  print (meanTS tsAll_1)
-  print (minTS tsAll_1)
-  print (maxTS tsAll_1)
+  print ""
+  print $ meanTS tsAll_1
+  print $ minTS tsAll_1
+  print $ maxTS tsAll_1
+  print $ meanTS $ diffTS tsAll_1
 
   putStrLn "END" 
 

@@ -5,7 +5,8 @@ module GetProgWithHaskell.Unit3 (
   file2,
   file3,
   file4,
-  minTS, maxTS
+  minTS, maxTS,
+  diffTS
 ) where
 
 import qualified Data.Map as Map
@@ -141,14 +142,13 @@ minTS = compareTS min
 maxTS :: Ord a => TS a -> Maybe (Int, Maybe a)
 maxTS = compareTS max
 
-isNothingValue :: Maybe v -> Bool 
-isNothingValue (Just v) = False
-isNothingValue Nothing = True
+diffPairs :: Num a => Maybe a -> Maybe a -> Maybe a
+diffPairs _ Nothing = Nothing
+diffPairs Nothing _ = Nothing
+diffPairs (Just x) (Just y) = Just (x - y)
 
-tsToMap :: TS a -> Map.Map Int a
-tsToMap (TS teams values) = foldl insertMaybePair Map.empty (zip teams values)
-
-filterTSNothing :: TS a -> TS a
-filterTSNothing (TS key value) = undefined
---  where filterValues m =  Map.delete k (Map k a)
+diffTS :: Num a => TS a -> TS a
+diffTS (TS [] []) = TS [] []
+diffTS (TS times values) = TS times (Nothing : diffValues)
+  where diffValues = zipWith diffPairs (tail values) values
            
