@@ -6,7 +6,8 @@ module GetProgWithHaskell.Unit3 (
   file3,
   file4,
   minTS, maxTS,
-  diffTS
+  diffTS,
+  movingAvarageTS
 ) where
 
 import qualified Data.Map as Map
@@ -152,3 +153,23 @@ diffTS (TS [] []) = TS [] []
 diffTS (TS times values) = TS times (Nothing : diffValues)
   where diffValues = zipWith diffPairs (tail values) values
            
+meanMaybe :: (Real a) => [Maybe a] -> Maybe Double
+meanMaybe vals = if any (== Nothing) vals
+                 then Nothing
+                 else Just avg
+  where avg = mean (map fromJust vals)
+
+movingAvg :: (Real a) => [Maybe a] -> Int -> [Maybe Double]
+movingAvg [] n = []
+movingAvg vals n = if length nextVals == n
+                   then meanMaybe nextVals:movingAvg restVals n
+                   else []
+  where nextVals = take n vals
+        restVals = tail vals
+
+movingAvarageTS :: (Real a) => TS a -> Int -> TS Double
+movingAvarageTS (TS [] []) n = TS [] []
+movingAvarageTS (TS times values) n = TS times smoothedValues
+  where ma = movingAvg values n 
+        nothings = replicate (n `div` 2) Nothing
+        smoothedValues = mconcat [nothings, ma, nothings]

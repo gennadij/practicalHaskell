@@ -13,6 +13,7 @@ import Data.List
 import GetProgWithHaskell.Unit2 
 import GetProgWithHaskell.Unit3
 import Data.Maybe (fromJust)
+import GetProgWithHaskell.Unit3 (movingAvarageTS)
 
 
 someFunc :: IO ()
@@ -150,6 +151,7 @@ runTS = do
   print $ minTS tsAll_1
   print $ maxTS tsAll_1
   print $ meanTS $ diffTS tsAll_1
+  print $ movingAvarageTS tsAll_1 3
 
   putStrLn "END" 
 
