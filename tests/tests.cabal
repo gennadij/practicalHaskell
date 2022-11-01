@@ -27,6 +27,7 @@ library
   exposed-modules:
       GetProgWithHaskell.Unit2
       GetProgWithHaskell.Unit3
+      GetProgWithHaskell.Unit5
       Lib
   other-modules:
       Paths_tests

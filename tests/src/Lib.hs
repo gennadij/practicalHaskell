@@ -2,7 +2,7 @@ module Lib
     ( 
       someFunc,
       runRobotBattle,
-      runTS
+      runTS, runRobotPart
     ) where
 
 import Control.Monad.Writer
@@ -12,8 +12,8 @@ import Control.Monad.Error
 import Data.List
 import GetProgWithHaskell.Unit2 
 import GetProgWithHaskell.Unit3
+import GetProgWithHaskell.Unit5
 import Data.Maybe (fromJust)
-import GetProgWithHaskell.Unit3 (movingAvarageTS)
 
 
 someFunc :: IO ()
@@ -153,7 +153,12 @@ runTS = do
   print $ meanTS $ diffTS tsAll_1
   print $ movingAvarageTS tsAll_1 3
 
-  putStrLn "END" 
+  putStrLn "END"
+
+runRobotPart :: IO ()
+runRobotPart  = do
+  print $ renderHtml leftArm
+  putStrLn "END"
 
 
 
