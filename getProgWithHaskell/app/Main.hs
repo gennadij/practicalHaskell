@@ -1,6 +1,6 @@
 module Main (main) where
 
-import Lib (runRobotBattle, runTS, runRobotPart)
+import Lib (__select)
 
 main :: IO ()
 main = do 
@@ -8,4 +8,8 @@ main = do
   putStrLn "============================================"
   -- runTS
   putStrLn "============================================"
-  runRobotPart
+  -- runRobotPart
+  putStrLn "============================================"
+  putStrLn "SQL Like Queries"
+  putStrLn "============================================"
+  print __select

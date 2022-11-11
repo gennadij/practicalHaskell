@@ -28,6 +28,7 @@ library
       GetProgWithHaskell.Unit2
       GetProgWithHaskell.Unit3
       GetProgWithHaskell.Unit5
+      GetProgWithHaskell.Unit5Capstone
       Lib
   other-modules:
       Paths_getProgWithHaskell
