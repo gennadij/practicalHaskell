@@ -1,6 +1,6 @@
 module Main (main) where
 
-import Lib (__select)
+import Lib (__select, __where)
 
 main :: IO ()
 main = do 
@@ -13,3 +13,4 @@ main = do
   putStrLn "SQL Like Queries"
   putStrLn "============================================"
   print __select
+  print __where

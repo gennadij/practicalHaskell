@@ -1,9 +1,9 @@
 module Lib
     (
       runRobotBattle,
-      runTS, runRobotPart, __select
+      runTS, runRobotPart, __select, __where
     ) where
-      
+
 import GetProgWithHaskell.Unit2 
 import GetProgWithHaskell.Unit3
 import GetProgWithHaskell.Unit5
@@ -47,16 +47,16 @@ import GetProgWithHaskell.Unit5Capstone
 --  b <- (++ "second text")
 --  return (a ++ b)
 
---randomSt :: (RandomGen g, Random a) => State g a  
---randomSt = state random 
+--randomSt :: (RandomGen g, Random a) => State g a
+--randomSt = state random
 
---threeCoins :: State StdGen (Bool,Bool,Bool, Bool)  
---threeCoins = do  
---    a <- randomSt  
---    b <- randomSt  
+--threeCoins :: State StdGen (Bool,Bool,Bool, Bool)
+--threeCoins = do
+--    a <- randomSt
+--    b <- randomSt
 --    c <- randomSt
---    d <- randomSt 
---    return (a,b,c,d) 
+--    d <- randomSt
+--    return (a,b,c,d)
 
 -- finalCountDownDiffList :: Int -> Writer (DiffList String) ()
 -- finalCountDownDiffList 0 = do
@@ -68,19 +68,19 @@ import GetProgWithHaskell.Unit5Capstone
 
 -- RPM Calculator
 
---rpn1 :: String -> Double  
+--rpn1 :: String -> Double
 --rpn1 = head . foldl foldingFunction1 [] . words
 
---foldingFunction1 :: [Double] -> String -> [Double]  
---foldingFunction1 (x:y:ys) "*" = (x * y):ys  
---foldingFunction1 (x:y:ys) "+" = (x + y):ys  
---foldingFunction1 (x:y:ys) "-" = (y - x):ys  
---foldingFunction1 xs numberString = read numberString:xs 
+--foldingFunction1 :: [Double] -> String -> [Double]
+--foldingFunction1 (x:y:ys) "*" = (x * y):ys
+--foldingFunction1 (x:y:ys) "+" = (x + y):ys
+--foldingFunction1 (x:y:ys) "-" = (y - x):ys
+--foldingFunction1 xs numberString = read numberString:xs
 
 --foldingTest :: [Double] -> String -> [Double]
 --foldingTest dList st = read st:dList
 
---rpn :: String -> Maybe Double 
+--rpn :: String -> Maybe Double
 --rpn st = do
 --  [res] <- foldM foldingFunction [] (words st)
 --  return res
@@ -88,7 +88,7 @@ import GetProgWithHaskell.Unit5Capstone
 --readMaybe :: (Read a) => String -> Maybe a
 --readMaybe st = case reads st of
 --  [(x, "")] -> Just x
---  _         -> Nothing 
+--  _         -> Nothing
 
 --foldingFunction :: [Double] -> String -> Maybe [Double]
 --foldingFunction (x:y:ys) "+" = return ((x + y ) : ys)
@@ -165,3 +165,6 @@ students = [ (Student 1 Senior (Name "Audre" "Lorde"))
 
 __select :: [String]
 __select = _select (lastName . studentName) students
+
+__where :: [Name]
+__where = _where (startWith 'J' . firstName) (_select studentName students)
