@@ -1,7 +1,7 @@
 module Lib
     (
       runRobotBattle,
-      runTS, runRobotPart, __select, __where
+      runTS, runRobotPart, __select, __where, __join
     ) where
 
 import GetProgWithHaskell.Unit2 
@@ -162,9 +162,18 @@ students = [ (Student 1 Senior (Name "Audre" "Lorde"))
             ,(Student 5 Sophomore (Name "Jean" "Baudrillard"))
             ,(Student 6 Junior (Name "Julia" "Kristeva"))]
 
+teachers :: [Teacher]
+teachers = [ Teacher 100 (Name "Simone" "De Beauvior")
+           , Teacher 200 (Name "Susan" "Sontag")]
+
+courses :: [Course]
+courses = [ Course 101 "French" 100
+          , Course 201 "English" 200]
 
 __select :: [String]
 __select = _select (lastName . studentName) students
 
 __where :: [Name]
 __where = _where (startWith 'J' . firstName) (_select studentName students)
+
+__join = _join teachers courses teacherId teacher

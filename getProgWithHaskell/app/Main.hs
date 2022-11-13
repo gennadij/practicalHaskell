@@ -1,6 +1,6 @@
 module Main (main) where
 
-import Lib (__select, __where)
+import Lib (__select, __where, __join)
 
 main :: IO ()
 main = do 
@@ -14,3 +14,4 @@ main = do
   putStrLn "============================================"
   print __select
   print __where
+  print __join
