@@ -18,6 +18,14 @@ data Person = Person      { fName :: String
 
 data Gender = Male | Female | Unknown deriving Show
 
+data TimeMachine = TimeMachine { manufactureName :: String
+                               , tMModel :: Integer
+                               , tMName :: String
+                               , tMType :: TMType
+                               , price ::Double } deriving Show
+
+data TMType = Past | Future deriving Show
+
 clientGovOrg :: Client
 clientGovOrg = GovOrg "GovOrg Test Test"
 
@@ -26,10 +34,6 @@ clientCompany = Company "Limited Bla Bla" 123 (Person "Mustername" "Mustername" 
 
 clientIndividual :: Client
 clientIndividual = Individual (Person "IndMuastername" "IndMustername" Female)
-
-data TimeMachine = TimeMachine String Integer String TMType Double
-
-data TMType = Past | Future
 
 timeMachine :: TimeMachine
 timeMachine = TimeMachine "TM Manufacture" 1234 "FirstTM" Past 1235.50
