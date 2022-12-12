@@ -18,5 +18,8 @@
     <orderEntry type="library" name="array-0.5.4.0" level="project" />
     <orderEntry type="library" name="deepseq-1.4.5.0" level="project" />
     <orderEntry type="library" name="transformers-0.5.6.2" level="project" />
+    <orderEntry type="library" name="random-1.2.1.1" level="project" />
+    <orderEntry type="library" name="bytestring-0.10.12.1" level="project" />
+    <orderEntry type="library" name="splitmix-0.1.0.4" level="project" />
   </component>
 </module>
