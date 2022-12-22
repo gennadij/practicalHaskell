@@ -5,16 +5,19 @@ data InfNumber a = MinusInf
                  | PlusInf
                  | Number a deriving Show
 
-data Client = GovOrg     { clientName :: String}
-            | Company    { clientName :: String
+data Client i = GovOrg   { clientId :: i
+                         , clientName :: String}
+              | Company  { clientId :: i
+                         , clientName :: String
                          , companyId :: Integer
                          , person :: Person
                          , duty :: String }
-            | Individual { person :: Person } deriving Show
+              | Individual { clientId :: i
+                         , person :: Person } deriving Show
 
-data Person = Person      { fName :: String
-                          , lName :: String
-                          , gender :: Gender } deriving Show
+data Person = Person     { fName :: String
+                         , lName :: String
+                         , gender :: Gender } deriving Show
 
 data Gender = Male | Female | Unknown deriving Show
 
@@ -26,14 +29,14 @@ data TimeMachine = TimeMachine { manufactureName :: String
 
 data TMType = Past | Future deriving Show
 
-clientGovOrg :: Client
-clientGovOrg = GovOrg "GovOrg Test Test"
+clientGovOrg :: Num a => Client a
+clientGovOrg = GovOrg 1 "GovOrg Test Test"
 
-clientCompany :: Client
-clientCompany = Company "Limited Bla Bla" 123 (Person "Mustername" "Mustername" Male) "Bla Bla"
+clientCompany :: Num a => Client a
+clientCompany = Company 2 "Limited Bla Bla" 123 (Person "Mustername" "Mustername" Male) "Bla Bla"
 
-clientIndividual :: Client
-clientIndividual = Individual (Person "IndMuastername" "IndMustername" Female)
+clientIndividual :: Num a => Client a
+clientIndividual = Individual 3 (Person "IndMuastername" "IndMustername" Female)
 
 timeMachine :: TimeMachine
 timeMachine = TimeMachine "TM Manufacture" 1234 "FirstTM" Past 1235.50

@@ -26,6 +26,7 @@ source-repository head
 library
   exposed-modules:
       Chapter2
+      Chapter3
       Lib
       OwnData
   other-modules:
