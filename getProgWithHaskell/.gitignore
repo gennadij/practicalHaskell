@@ -1,4 +1,9 @@
 .stack-work/
 .idea/
+<<<<<<< HEAD
 *~
 /out/
+=======
+out/
+*~
+>>>>>>> 99d077065efb0d0fe896508cb5bcff33b1464774

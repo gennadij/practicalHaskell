@@ -35,13 +35,13 @@ data Course = Course { courseId :: Int
                      , teacher :: Int} deriving Show
 
 _select :: (a -> b) -> [a] -> [b]
-_select prop vals = do
-  val <- vals
+_select prop vales = do
+  val <- vales
   return (prop val)
 
 _where :: (a -> Bool) -> [a] -> [a]
-_where test vals = do
-  val <- vals
+_where test vales = do
+  val <- vales
   guard (test val)
   return val
 
@@ -55,4 +55,6 @@ _join data1 data2 prop1 prop2 = do
   let dataPairs = (d1, d2)
   guard ((prop1 (fst dataPairs)) == (prop2 (snd dataPairs)))
   return dataPairs
+  
+  
 

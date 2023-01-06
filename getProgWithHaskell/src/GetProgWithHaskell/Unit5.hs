@@ -47,6 +47,6 @@ renderHtml part = mconcat [ "<h2>", partName , "</h2>"
         partCost = show (cost part)
         partCount = show (count part)
 
-partsDB :: Map.Map Int RobotPart
-partsDB = Map.fromList keysVals
-  where keysVals = zip [1, 2, 3] [leftArm, rightArm, robotHead]
+-- partsDB :: Map.Map Int RobotPart
+-- partsDB = Map.fromList keysVals
+--  where keysVals = zip [1, 2, 3] [leftArm, rightArm, robotHead]
