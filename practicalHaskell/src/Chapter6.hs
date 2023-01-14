@@ -1,10 +1,19 @@
 {-#LANGUAGE FlexibleInstances #-}
 {-#LANGUAGE MultiParamTypeClasses#-}
-
+{-#LANGUAGE TemplateHaskell#-}
 module Chapter6 where
 
 import Data.List
 import qualified Data.Map as M
+import Lens.Micro.Platform
+import OwnData
+import Data.Char
+
+makeLenses ''ClientLens
+makeLenses ''PersonLens
+makeLenses ''TimeMachineLens
+makeLenses ''KMeansStateLens
+
 
 class Ord v => Vector v where
   distance :: v -> v -> Double
@@ -15,7 +24,7 @@ instance Vector (Double, Double) where
   centroid lst = let (u, v) = foldr (\(a, b) (c, d) -> (a + c, b + d)) (0, 0) lst
                      n      = fromIntegral $ length lst
                  in (u / n, v / n)
-                 
+
 class Vector v => Vectorizable e v where
   toVector :: e -> v
 
@@ -26,7 +35,8 @@ clusterAssignmentPhase :: (Ord v, Vector v, Vectorizable e v) => [v] -> [e] -> M
 clusterAssignmentPhase centroids points = 
   let initialMap = M.fromList $ zip centroids (repeat [])
     in foldr (
-        \p m -> let chosenC = minimumBy (compareDistance p) centroids in M.adjust (p:) chosenC m
+        -- \p m -> let chosenC = minimumBy (compareDistance p) centroids in M.adjust (p:) chosenC m
+        \p m -> M.adjust (p:) (minimumBy (compareDistance p) centroids) m
         ) initialMap points
   where compareDistance p x y = compare (distance x $ toVector p) (distance y $ toVector p)  
 
@@ -57,4 +67,16 @@ kMeans' centroids points threshold =
 initializeSample :: Int -> [e] -> [(Double,Double)]
 initializeSample 0 _ = []
 initializeSample n v = (fromIntegral n, fromIntegral n) : initializeSample (n - 1) v
+
+printPerson :: String
+printPerson = do
+  let client = IndividualLens 3 (PersonLens "Test5" "Test6" Female)
+  let clientNew = client & personLens.lNameLens .~ "Test7"
+  let clientUpdateId = clientNew & clientIdLens +~ 3
+  let clientNameUpper = clientNew & personLens.lNameLens %~ (map toUpper)
+  "Old : " ++ client ^. personLens.lNameLens ++ ", New :" ++ clientNew ^. personLens.lNameLens ++
+    ", NewID : " ++ show (clientUpdateId ^. clientIdLens) ++ ", ClientName to upper : " ++
+    clientNameUpper ^. personLens.lNameLens
+
+
 

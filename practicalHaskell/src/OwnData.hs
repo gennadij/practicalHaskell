@@ -16,8 +16,8 @@ data Client i = GovOrg   { clientId :: i
                          , person :: Person } deriving Show
 
 data Person = Person     { fName :: String
-                         , lName :: String
-                         , gender :: Gender } deriving Show
+                        , lName :: String
+                        , gender :: Gender } deriving Show
 
 data Gender = Male | Female | Unknown deriving Show
 
@@ -40,4 +40,32 @@ clientIndividual = Individual 3 (Person "IndMuastername" "IndMustername" Female)
 
 timeMachine :: TimeMachine
 timeMachine = TimeMachine "TM Manufacture" 1234 "FirstTM" Past 1235.50
+-- ====================================================================================================================
+
+data ClientLens i = GovOrgLens             { _clientIdLens :: i
+                                           , _clientNameLens :: String}
+                  | CompanyLens            { _clientIdLens :: i
+                                           , _clientNameLens :: String
+                                           , _companyIdLens :: Integer
+                                           , _personLens :: PersonLens
+                                           , _dutyLens :: String }
+                  | IndividualLens         { _clientIdLens :: i
+                                           , _personLens :: PersonLens } deriving Show
+
+data PersonLens = PersonLens               { _fNameLens :: String
+                                           , _lNameLens :: String
+                                           , _genderLens :: Gender
+                                           } deriving Show
+
+data TimeMachineLens = TimeMachineLens     { _manufactureNameLens :: String
+                                           , _tMModelLens :: Integer
+                                           , _tMNameLens :: String
+                                           , _tMTypeLens :: TMType
+                                           , _priceLens ::Double } deriving Show
+
+data KMeansStateLens e v = KMeansStateLens { _centroids :: [v]
+                                           , _points :: [e]
+                                           , _error :: Double
+                                           , threshold :: Double
+                                           , _steps :: Int }
 

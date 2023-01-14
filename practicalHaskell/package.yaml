@@ -1,5 +1,5 @@
 name:                practicalHaskell
-version:             0.1.0.0
+version:             0.1.0.1
 github:              "gennadij/practicalHaskell"
 license:             BSD3
 author:              "Gennadi Heimann"
@@ -22,6 +22,8 @@ description:         Please see the README on GitHub at <https://github.com/gith
 dependencies:
 - base >= 4.7 && < 5
 - containers
+- microlens
+- microlens-platform
 
 ghc-options:
 - -Wall
@@ -29,10 +31,10 @@ ghc-options:
 - -Widentities
 - -Wincomplete-record-updates
 - -Wincomplete-uni-patterns
-- -Wmissing-export-lists
+#- -Wmissing-export-lists
 - -Wmissing-home-modules
-- -Wpartial-fields
-- -Wredundant-constraints
+#- -Wpartial-fields
+#- -Wredundant-constraints
 
 library:
   source-dirs: src
@@ -47,6 +49,9 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - practicalHaskell
+    - containers
+    - microlens
+    - microlens-platform
 
 tests:
   practicalHaskell-test:
