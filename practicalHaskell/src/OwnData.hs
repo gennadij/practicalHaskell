@@ -65,7 +65,7 @@ data TimeMachineLens = TimeMachineLens     { _manufactureNameLens :: String
 
 data KMeansStateLens e v = KMeansStateLens { _centroids :: [v]
                                            , _points :: [e]
-                                           , _error :: Double
-                                           , threshold :: Double
+                                           , _e :: Double -- error
+                                           , _threshold :: Double
                                            , _steps :: Int }
 

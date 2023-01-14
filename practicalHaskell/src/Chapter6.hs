@@ -78,5 +78,25 @@ printPerson = do
     ", NewID : " ++ show (clientUpdateId ^. clientIdLens) ++ ", ClientName to upper : " ++
     clientNameUpper ^. personLens.lNameLens
 
+-- ======================================================================================================================
+initializeState :: (Int -> [e] -> [v]) -> Int -> [e] -> Double -> KMeansStateLens e v
+initializeState i n points threshold = KMeansStateLens (i n points) points (1.0 / 0.0) threshold 0
 
+clusterAssignmentPhaseLens :: (Vector v, Vectorizable e v) => KMeansStateLens e v -> M.Map v [e]
+clusterAssignmentPhaseLens = undefined -- See exercise 6.3 
+
+kMeansLens :: (Vector v, Vectorizable e v) => (Int -> [e] -> [v]) -> Int -> [e] -> Double -> [v]
+kMeansLens i n points threshold = view centroids $ kMeansLens' (initializeState i n points threshold)
+
+kMeansLens' :: (Vector v, Vectorizable e v) => KMeansStateLens e v -> KMeansStateLens e v
+kMeansLens' state = 
+  let assignments = clusterAssignmentPhaseLens state
+      state1      = state & centroids.traversed 
+                          %~ (\c -> centroid 
+                            $ fmap toVector 
+                            $ M.findWithDefault [] c assignments)
+      state2      = state1 & e .~ sum (zipWith distance (state ^. centroids) (state1 ^. centroids))
+      state3      = state2 & steps +~1
+  in if state3 ^. e < state3 ^. threshold then state3
+     else kMeansLens' state3
 
