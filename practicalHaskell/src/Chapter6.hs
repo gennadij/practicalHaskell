@@ -32,19 +32,19 @@ instance Vectorizable (Double, Double) (Double, Double) where
   toVector = id
 
 clusterAssignmentPhase :: (Ord v, Vector v, Vectorizable e v) => [v] -> [e] -> M.Map v [e]
-clusterAssignmentPhase centroids points = 
-  let initialMap = M.fromList $ zip centroids (repeat [])
+clusterAssignmentPhase _centroids _points =
+  let initialMap = M.fromList $ zip _centroids (repeat [])
     in foldr (
         -- \p m -> let chosenC = minimumBy (compareDistance p) centroids in M.adjust (p:) chosenC m
-        \p m -> M.adjust (p:) (minimumBy (compareDistance p) centroids) m
-        ) initialMap points
+        \p m -> M.adjust (p:) (minimumBy (compareDistance p) _centroids) m
+        ) initialMap _points
   where compareDistance p x y = compare (distance x $ toVector p) (distance y $ toVector p)  
 
 newCentroidPhase :: (Vector v, Vectorizable e v) => M.Map v [e] -> [(v, v)]
 newCentroidPhase = M.toList . fmap (centroid . map toVector)
 
 shouldStop :: (Vector v) => [(v, v)] -> Double -> Bool
-shouldStop centroids threshold = foldr (\(x, y) s -> s + distance x y) 0.0 centroids < threshold
+shouldStop _centroids _threshold = foldr (\(x, y) s -> s + distance x y) 0.0 _centroids < _threshold
 
 kMeans :: (Vector v, Vectorizable e v) 
   => (Int -> [e] -> [v]) -- initialization function
@@ -52,17 +52,17 @@ kMeans :: (Vector v, Vectorizable e v)
   -> [e]                 -- the information
   -> Double              -- threshold
   -> [v]                 -- final centroids
-kMeans i k points = kMeans' (i k points) points
+kMeans i k _points = kMeans' (i k _points) _points
 
 kMeans' :: (Vector v, Vectorizable e v) =>
   [v] -> [e] -> Double -> [v]
-kMeans' centroids points threshold = 
-  let assignments     = clusterAssignmentPhase centroids points
+kMeans' _centroids _points _threshold =
+  let assignments     = clusterAssignmentPhase _centroids _points
       oldNewCentroids = newCentroidPhase assignments
       newCentroids    = map snd oldNewCentroids
-  in if shouldStop oldNewCentroids threshold
+  in if shouldStop oldNewCentroids _threshold
      then newCentroids
-     else kMeans' newCentroids points threshold
+     else kMeans' newCentroids _points _threshold
      
 initializeSample :: Int -> [e] -> [(Double,Double)]
 initializeSample 0 _ = []
@@ -72,28 +72,28 @@ printPerson :: String
 printPerson = do
   let client = IndividualLens 3 (PersonLens "Test5" "Test6" Female)
   let clientNew = client & personLens.lNameLens .~ "Test7"
-  let clientUpdateId = clientNew & clientIdLens +~ 3
+  --let clientUpdateId = clientNew & clientIdLens +~ 3
   let clientNameUpper = clientNew & personLens.lNameLens %~ (map toUpper)
   "Old : " ++ client ^. personLens.lNameLens ++ ", New :" ++ clientNew ^. personLens.lNameLens ++
-    ", NewID : " ++ show (clientUpdateId ^. clientIdLens) ++ ", ClientName to upper : " ++
+    ", NewID : " ++ ", ClientName to upper : " ++
     clientNameUpper ^. personLens.lNameLens
 
 -- ======================================================================================================================
 initializeState :: (Int -> [e] -> [v]) -> Int -> [e] -> Double -> KMeansStateLens e v
-initializeState i n points threshold = KMeansStateLens (i n points) points (1.0 / 0.0) threshold 0
+initializeState i n _points _threshold = KMeansStateLens (i n _points) _points (1.0 / 0.0) _threshold 0
 
 clusterAssignmentPhaseLens :: (Vector v, Vectorizable e v) => KMeansStateLens e v -> M.Map v [e]
-clusterAssignmentPhaseLens = undefined -- See exercise 6.3 
+clusterAssignmentPhaseLens = undefined -- See exercise 6.3
 
 kMeansLens :: (Vector v, Vectorizable e v) => (Int -> [e] -> [v]) -> Int -> [e] -> Double -> [v]
-kMeansLens i n points threshold = view centroids $ kMeansLens' (initializeState i n points threshold)
+kMeansLens i n _points _threshold = view centroids $ kMeansLens' (initializeState i n _points _threshold)
 
 kMeansLens' :: (Vector v, Vectorizable e v) => KMeansStateLens e v -> KMeansStateLens e v
-kMeansLens' state = 
+kMeansLens' state =
   let assignments = clusterAssignmentPhaseLens state
-      state1      = state & centroids.traversed 
-                          %~ (\c -> centroid 
-                            $ fmap toVector 
+      state1      = state & centroids.traversed
+                          %~ (\c -> centroid
+                            $ fmap toVector
                             $ M.findWithDefault [] c assignments)
       state2      = state1 & e .~ sum (zipWith distance (state ^. centroids) (state1 ^. centroids))
       state3      = state2 & steps +~1

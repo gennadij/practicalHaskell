@@ -5,7 +5,7 @@ module Chapter3 where
 import qualified Data.List as L
 import OwnData
 
-duplicateOdds = map(*2) . filter odd
+--duplicateOdds = map(*2) . filter odd
 
 permutationsStartWith :: Char -> String -> [String]
 permutationsStartWith letter = filter (\l -> head l == letter) . L.permutations
