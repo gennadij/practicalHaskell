@@ -79,12 +79,21 @@ printPerson = do
     clientNameUpper ^. personLens.lNameLens
 
 -- ======================================================================================================================
+-- =================
+-- = Lenses        =
+-- =================
+
 initializeState :: (Int -> [e] -> [v]) -> Int -> [e] -> Double -> KMeansStateLens e v
 initializeState i n _points _threshold = KMeansStateLens (i n _points) _points (1.0 / 0.0) _threshold 0
 
 clusterAssignmentPhaseLens :: (Vector v, Vectorizable e v) => KMeansStateLens e v -> M.Map v [e]
-clusterAssignmentPhaseLens = undefined -- See exercise 6.3
-
+clusterAssignmentPhaseLens state =
+  let p = state ^. points
+      c = state ^. centroids
+      initialMap = M.fromList $ zip c (repeat [])
+      -- M.adjust (p:) (minimumBy (compareDistance p) _centroids) m
+  in foldr (\p' m -> M.adjust (p' :) (minimumBy (compareDistance p') c) m) initialMap p
+  where compareDistance p x y = compare (distance x $ toVector p) (distance y $ toVector p)
 kMeansLens :: (Vector v, Vectorizable e v) => (Int -> [e] -> [v]) -> Int -> [e] -> Double -> [v]
 kMeansLens i n _points _threshold = view centroids $ kMeansLens' (initializeState i n _points _threshold)
 
@@ -99,4 +108,32 @@ kMeansLens' state =
       state3      = state2 & steps +~1
   in if state3 ^. e < state3 ^. threshold then state3
      else kMeansLens' state3
+-- ======================================================================================================================
 
+thenDo :: Maybe a -> (a -> Maybe b) -> Maybe b
+thenDo Nothing _ = Nothing
+thenDo (Just x) f = f x
+
+purchaseByClientId :: Integer -> [Integer]
+purchaseByClientId _ = [1, 2, 3]
+
+numberItemsByPurchaseId :: Integer -> Maybe Integer
+numberItemsByPurchaseId _ = Just 3
+
+productIdByPurchaseId :: Integer -> Maybe Integer
+productIdByPurchaseId _ = Just 4
+
+priceByProductId :: Integer -> Maybe Double
+priceByProductId _ = Just 5.0
+
+purchaseValue :: Integer -> Maybe Double
+purchaseValue purchaseId =
+  numberItemsByPurchaseId purchaseId `thenDo` (\n ->
+  productIdByPurchaseId purchaseId    `thenDo` (\productId ->
+  priceByProductId productId          `thenDo` (\price ->
+  Just $ fromInteger n * price         )))
+
+
+type State s a = s -> (a, s)
+thenDoState :: State s a -> (a -> State s b) -> State s b
+thenDoState f g s  = let (resultOfF, stateAfterF) = f s in g resultOfF stateAfterF
