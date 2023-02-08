@@ -21,3 +21,5 @@ main = do
   -- let client = IndividualLens 3 (PersonLens "Test5" "Test6" Male)
   -- print $ client P.^. personLens.fNameLens
   print $ kMeansLens initializeSample 2 info 0.001
+  print $ kMeansStateComb initializeSample 2 info 0.001
+  
