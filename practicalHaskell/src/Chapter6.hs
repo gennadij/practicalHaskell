@@ -8,6 +8,7 @@ import qualified Data.Map as M
 import Lens.Micro.Platform
 import OwnData
 import Data.Char
+import Control.Monad.State
 
 makeLenses ''ClientLens
 makeLenses ''PersonLens
@@ -138,21 +139,21 @@ purchaseValue purchaseId =
 -- Combinators for State
 -- ==========================
 
-type State s a = s -> (a, s)
-thenDoState :: State s a -> (a -> State s b) -> State s b
+type State_ s a = s -> (a, s)
+thenDoState :: State_ s a -> (a -> State_ s b) -> State_ s b
 thenDoState f g s  = let (resultOfF, stateAfterF) = f s in g resultOfF stateAfterF
 
 newCentroids :: (Vector v, Vectorizable e v) => M.Map v [e] -> [v]
 newCentroids = M.elems . fmap (centroid . map toVector)
 
 kMeansStateComb :: (Vector v, Vectorizable e v) => (Int -> [e] -> [v]) -> Int -> [e] -> Double -> [v]
-kMeansStateComb i k pts t = fst $ kMeansStateComb' pts (initialStateComb i k pts t)
+kMeansStateComb i k pts t = fst $ kMeansStateComb'' pts (initialStateComb i k pts t)
 
 initialStateComb :: (Vector v, Vectorizable e v) =>
   (Int -> [e] -> [v]) -> Int -> [e] -> Double -> KMeansStateComb v
 initialStateComb i k pts t = KMeansStateComb (i k pts ) t 0
 
-kMeansStateComb' :: (Vector v, Vectorizable e v) => [e] -> State (KMeansStateComb v) [v]
+kMeansStateComb' :: (Vector v, Vectorizable e v) => [e] -> State_ (KMeansStateComb v) [v]
 kMeansStateComb' points =
   (\s -> (centroids__ s ,s ))                               `thenDoState` (\prevCentrs   ->
   (\s -> (clusterAssignmentPhase prevCentrs points , s))    `thenDoState` (\assignments  ->
@@ -162,3 +163,61 @@ kMeansStateComb' points =
   (\s -> (threshold__ s, s))                                `thenDoState` (\t            ->
   (\s -> (sum $ zipWith distance prevCentrs newCentrs, s))  `thenDoState` (\err          ->
   if err < t then (\s -> (newCentrs, s)) else (kMeansStateComb' points) )))))))
+
+remain_ :: a -> (s -> (a, s))
+remain_ x = \s -> (x, s)
+access_ :: (s -> a) -> (s -> (a, s))
+access_ f = \s -> (f s , s)
+
+modify_ :: (s -> s) -> (s -> ((), s))
+modify_ f = \s -> ((), f s)
+
+kMeansStateComb'' :: (Vector v, Vectorizable e v) => [e] -> State_ (KMeansStateComb v) [v]
+kMeansStateComb'' points =
+  access_ centroids__                                        `thenDoState` (\prevCentrs   ->
+  remain_ (clusterAssignmentPhase prevCentrs points)          `thenDoState` (\assignments  ->
+  remain_ (newCentroids assignments)                         `thenDoState` (\newCentrs    ->
+  modify_ (\s -> s {centroids__ = newCentrs})                `thenDoState` (\_            ->
+  modify_ (\s -> s {steps__ = steps__ s + 1})                `thenDoState` (\_            ->
+  access_ threshold__                                        `thenDoState` (\t            ->
+  remain_ (sum $ zipWith distance prevCentrs newCentrs)      `thenDoState` (\err          ->
+  if err < t then remain_ newCentrs else kMeansStateComb' points )))))))
+
+-- ============================
+-- Dissecting the Combinators
+-- ============================
+
+purchaseValue' :: Integer -> Maybe Double
+purchaseValue' purchaseId =
+  numberItemsByPurchaseId purchaseId   >>= (\n ->
+  productIdByPurchaseId purchaseId     >>= (\productId ->
+  priceByProductId productId           >>= (\price ->
+  Just $ fromInteger n * price         )))
+
+-- ============================
+-- do Notation
+-- ============================
+
+purchaseValueDo :: Integer -> Maybe Double
+purchaseValueDo purchaseId = do
+  n            <- numberItemsByPurchaseId purchaseId
+  productId    <- productIdByPurchaseId purchaseId
+  price        <- priceByProductId productId
+  return $ fromInteger n * price
+
+kMeansStateDo' :: (Vector v, Vectorizable e v) => [e] -> State(KMeansStateComb v ) [v]
+kMeansStateDo' points = do
+  prevCentrs <- gets centroids__
+  let assignments = clusterAssignmentPhase prevCentrs points
+      newCentrs   = newCentroids assignments
+  modify (\s -> s {centroids__ = newCentrs})
+  modify (\s -> s {steps__ = steps__ s + 1})
+  t <- fmap threshold__ get
+  let err = sum $ zipWith distance prevCentrs newCentrs
+  if err < t then return newCentrs else kMeansStateDo' points
+
+kMeansStateDo :: (Vector v, Vectorizable e v) => (Int -> [e] -> [v]) -> Int -> [e] -> Double -> [v]
+kMeansStateDo i k pts t = evalState (kMeansStateDo' pts) (initialStateComb i k pts t)
+
+kMeansStateDoRunState :: (Vector v, Vectorizable e v) => (Int -> [e] -> [v]) -> Int -> [e] -> Double -> ([v], KMeansStateComb v)
+kMeansStateDoRunState i k pts t = runState (kMeansStateDo' pts) (initialStateComb i k pts t)

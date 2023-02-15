@@ -71,5 +71,5 @@ data KMeansStateLens e v = KMeansStateLens { _centroids :: [v]
 
 data KMeansStateComb v = KMeansStateComb   { centroids__ :: [v]
                                            , threshold__ :: Double
-                                           , steps__ :: Int }
+                                           , steps__ :: Int } deriving Show
 

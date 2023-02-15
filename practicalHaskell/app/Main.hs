@@ -9,7 +9,7 @@ main = do
   --testInfFoldr
   -- print (duplicateOdds [1,2,3,4,5,6,7,8,9])
   -- print ( permutationsStartWith 'A' "DTsngzswarakljdlAölkjAkjfasdjfls")
-  let info = [(1, 1), (1, 2), (4, 4), (4, 5), (8, 3), (3, 8), (4, 5)] :: [(Double, Double)]
+  let info = [(1, 1), (1, 2), (4, 4), (4, 5), (8, 3), (3, 8), (4, 5), (5, 7), (20, 20), (100, 100)] :: [(Double, Double)]
   -- print $ kMeans initializeSample 2 info 0.001
   -- print $ initializeSample 2 info
   -- print $ clusterAssignmentPhase (initializeSample 2 info) info
@@ -22,4 +22,9 @@ main = do
   -- print $ client P.^. personLens.fNameLens
   print $ kMeansLens initializeSample 2 info 0.001
   print $ kMeansStateComb initializeSample 2 info 0.001
-  
+  print $ "Purchase Value 10 " ++ show (purchaseValue' 10)
+  print $ purchaseValueDo 20
+  print $ "mMeansStateDo : " ++ show (kMeansStateDo initializeSample 2 info 0.001)
+  print $ "mMeansStateDoRunState : " ++ show (kMeansStateDoRunState initializeSample 3 info 0.001)
+  print "END"
+
