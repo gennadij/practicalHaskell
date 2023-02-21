@@ -73,3 +73,12 @@ data KMeansStateComb v = KMeansStateComb   { centroids__ :: [v]
                                            , threshold__ :: Double
                                            , steps__ :: Int } deriving Show
 
+data KMeansStateCombLens v = KMeansStateCombLens   { _centroidsLens :: [v]
+                                                   , _thresholdLens :: Double
+                                                   , _stepsLens :: Int } deriving Show
+
+data Settings e v = Settings                { i :: Int -> [e] -> [v]
+                                            , k :: Int
+                                            , th :: Double
+                                            , user :: Person }
+

@@ -26,5 +26,7 @@ main = do
   print $ purchaseValueDo 20
   print $ "mMeansStateDo : " ++ show (kMeansStateDo initializeSample 2 info 0.001)
   print $ "mMeansStateDoRunState : " ++ show (kMeansStateDoRunState initializeSample 3 info 0.001)
+  print $ "mMeansStateDoLensRunState : " ++ show (kMeansStateDoLensRunState initializeSample 3 info 0.001)
+  print $ "mMeansRWS : " ++ show (kMeansRWS initializeSample 2 info 0.001)
   print "END"
 

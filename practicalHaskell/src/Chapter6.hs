@@ -9,11 +9,17 @@ import Lens.Micro.Platform
 import OwnData
 import Data.Char
 import Control.Monad.State
+import Control.Monad.Reader
+import Control.Monad.RWS
+import Control.Monad.ST
+import Control.Monad (unless)
+import Data.Monoid (Sum(..))
 
 makeLenses ''ClientLens
 makeLenses ''PersonLens
 makeLenses ''TimeMachineLens
 makeLenses ''KMeansStateLens
+makeLenses ''KMeansStateCombLens
 
 
 class Ord v => Vector v where
@@ -221,3 +227,67 @@ kMeansStateDo i k pts t = evalState (kMeansStateDo' pts) (initialStateComb i k p
 
 kMeansStateDoRunState :: (Vector v, Vectorizable e v) => (Int -> [e] -> [v]) -> Int -> [e] -> Double -> ([v], KMeansStateComb v)
 kMeansStateDoRunState i k pts t = runState (kMeansStateDo' pts) (initialStateComb i k pts t)
+
+-- ============================
+-- State and Lenses
+-- ============================
+
+kMeanasStateDoLens :: (Vector v, Vectorizable e v) => [e] -> State (KMeansStateCombLens v ) [v]
+kMeanasStateDoLens points = do
+  prevCentrs <- use centroidsLens
+  let assigments = clusterAssignmentPhase prevCentrs points
+      newCentrs  = newCentroids assigments
+  centroidsLens  .= newCentrs
+  stepsLens      += 1
+  let err = sum $ zipWith distance prevCentrs newCentrs
+  t <- use thresholdLens
+  if err < t then return newCentrs else kMeanasStateDoLens points
+
+kMeansStateDoLensRunState :: (Vector v, Vectorizable e v) => (Int -> [e] -> [v]) -> Int -> [e] -> Double -> ([v], KMeansStateComb v)
+kMeansStateDoLensRunState i k pts t = runState (kMeansStateDo' pts) (initialStateComb i k pts t)
+
+-- ============================
+-- Reader, Writer, RWS
+-- ============================
+
+-- kMeansMainReader :: (Vector v, Vectorizable e v) => [e] -> Reader (Settings e v ) [v]
+-- kMeansMainReader points = do
+--   i' <- asks i
+--   k' <- asks k
+--   t' <- asks th
+--   return $ kMeansStateDoLensRunState i' k' points t'
+
+-- compareClusters :: (Vector v, Vectorizable e v) => [e] -> Reader (Settings e v ) [v] -> ([v], [v])
+-- compareClusters points = do
+--  c1 <- kMeansMainReader points
+--  c2 <- local (\s -> s {k = k s + 1})
+--              (kMeansMainReader points)
+--  return (c1, c2)
+
+kMeansRWS' :: (Vector v , Vectorizable e v) => [e] -> RWS Double (Sum Int) [v] ()
+kMeansRWS' points = do
+  prevCentrs <- get
+  let assignments = clusterAssignmentPhase prevCentrs points
+      newCentrs   = newCentroids assignments
+  put newCentrs
+  tell (Sum 1)
+  t <- ask
+  let err = sum $ zipWith distance prevCentrs newCentrs
+  unless (err < t) $ kMeansRWS' points
+
+kMeansRWS :: (Vector v, Vectorizable e v) => (Int -> [e] -> [v]) -> Int -> [e] -> Double -> ([v], Sum Int)
+kMeansRWS i n pts t = execRWS (kMeansRWS' pts) t (i n pts)
+
+-- ============================
+-- Mutable References with ST
+-- ============================
+
+kMeansST :: (Vector v, Vectorizable e v) => (Int -> [e] -> [v]) -> Int -> [e] -> Double -> ([v], Int)
+kMeansST i k points threshold = do
+  runST $ do
+    c <- newSTRef (i k points)
+    d <- newSTRef 1
+    kMeansST' c points threshold d
+kMeansST' :: (Vector v , Vectorizable e v) => [e] -> RWS Double (Sum Int) [v] ()
+kMeansST' points = undefined
+-- https://github.com/beyonddream/practical_haskell/blob/master/chapter6/app/Chapter6/StateLenses.hs
