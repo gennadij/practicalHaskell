@@ -28,6 +28,7 @@ library
       Chapter2
       Chapter3
       Chapter6
+      Chapter7
       Lib
       OwnData
   other-modules:

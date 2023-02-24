@@ -14,6 +14,7 @@ import Control.Monad.RWS
 import Control.Monad.ST
 import Control.Monad (unless)
 import Data.Monoid (Sum(..))
+import Data.STRef (newSTRef, STRef, readSTRef, writeSTRef, modifySTRef, modifySTRef')
 
 makeLenses ''ClientLens
 makeLenses ''PersonLens
@@ -51,7 +52,7 @@ newCentroidPhase :: (Vector v, Vectorizable e v) => M.Map v [e] -> [(v, v)]
 newCentroidPhase = M.toList . fmap (centroid . map toVector)
 
 shouldStop :: (Vector v) => [(v, v)] -> Double -> Bool
-shouldStop _centroids _threshold = foldr (\(x, y) s -> s + distance x y) 0.0 _centroids < _threshold
+shouldStop __centroids __threshold = foldr (\(x, y) s -> s + distance x y) 0.0 __centroids < __threshold
 
 kMeans :: (Vector v, Vectorizable e v) 
   => (Int -> [e] -> [v]) -- initialization function
@@ -288,6 +289,16 @@ kMeansST i k points threshold = do
     c <- newSTRef (i k points)
     d <- newSTRef 1
     kMeansST' c points threshold d
-kMeansST' :: (Vector v , Vectorizable e v) => [e] -> RWS Double (Sum Int) [v] ()
-kMeansST' points = undefined
--- https://github.com/beyonddream/practical_haskell/blob/master/chapter6/app/Chapter6/StateLenses.hs
+kMeansST' :: (Num b,Vectorizable e v) => STRef s [v] -> [e] -> Double -> STRef s b -> ST s ([v], b)
+kMeansST' centrs points threshold depth = do
+  c <- readSTRef centrs
+  d <- readSTRef depth
+  let assignments = clusterAssignmentPhase c points
+      newCentr = newCentroidPhase assignments
+  writeSTRef centrs $ map snd newCentr
+  modifySTRef' depth (+1)
+  if shouldStop newCentr threshold
+    then return (c, d)
+    else kMeansST' centrs points threshold depth
+    
+-- https://github.com/beyonddream/practical_haskell
