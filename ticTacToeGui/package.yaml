@@ -1,10 +1,10 @@
-name:                practicalHaskell
-version:             0.1.0.1
-github:              "gennadij/practicalHaskell"
-license:             BSD3
-author:              "Gennadi Heimann"
-maintainer:          "gennadiheimann@gmail.com"
-copyright:           "2022 Gennadi Heimann"
+name:                ticTacToeGui
+version:             0.1.0.0
+github:              "githubuser/ticTacToeGui"
+license:             BSD-3-Clause
+author:              "Author name here"
+maintainer:          "example@example.com"
+copyright:           "2024 Author name here"
 
 extra-source-files:
 - README.md
@@ -17,34 +17,37 @@ extra-source-files:
 # To avoid duplicated efforts in documentation and dealing with the
 # complications of embedding Haddock markup inside cabal files, it is
 # common to point users to the README.md file.
-description:         Please see the README on GitHub at <https://github.com/githubuser/practicalHaskell#readme>
+description:         Please see the README on GitHub at <https://github.com/githubuser/ticTacToeGui#readme>
 
 dependencies:
 - base >= 4.7 && < 5
-- containers
-- microlens
-- microlens-platform
+- threepenny-gui
+- filepath
+- random
+- array
 - mtl
-- monad-par
-- deepseq
+#- snap-core-1.0.5.1
+#- snap-server-1.1.2.1
+#- readable-0.3.1
+#- websockets-snap-0.10.3.1
+#- io-streams-haproxy-1.0.1.0
 
 ghc-options:
 - -Wall
-- -threaded
 - -Wcompat
 - -Widentities
 - -Wincomplete-record-updates
 - -Wincomplete-uni-patterns
-#- -Wmissing-export-lists
+- -Wmissing-export-lists
 - -Wmissing-home-modules
-#- -Wpartial-fields
-#- -Wredundant-constraints
+- -Wpartial-fields
+- -Wredundant-constraints
 
 library:
   source-dirs: src
 
 executables:
-  practicalHaskell-exe:
+  ticTacToeGui-exe:
     main:                Main.hs
     source-dirs:         app
     ghc-options:
@@ -52,13 +55,10 @@ executables:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - practicalHaskell
-    - containers
-    - microlens
-    - microlens-platform
+    - ticTacToeGui
 
 tests:
-  practicalHaskell-test:
+  ticTacToeGui-test:
     main:                Spec.hs
     source-dirs:         test
     ghc-options:
@@ -66,4 +66,4 @@ tests:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - practicalHaskell
+    - ticTacToeGui
