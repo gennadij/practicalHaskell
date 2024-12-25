@@ -9,9 +9,9 @@ version:        0.1.0.0
 description:    Please see the README on GitHub at <https://github.com/githubuser/haskell-examples#readme>
 homepage:       https://github.com/githubuser/haskell-examples#readme
 bug-reports:    https://github.com/githubuser/haskell-examples/issues
-author:         Author name here
+author:         Gennadi Heimann
 maintainer:     example@example.com
-copyright:      2024 Author name here
+copyright:      2024 Gennadi Heimann
 license:        BSD-3-Clause
 license-file:   LICENSE
 build-type:     Simple
@@ -25,6 +25,8 @@ source-repository head
 
 library
   exposed-modules:
+      CsvFilter
+      CsvReaderWriter
       Lib
   other-modules:
       Paths_haskell_examples
@@ -35,6 +37,11 @@ library
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
       base >=4.7 && <5
+    , bytestring
+    , cassava
+    , directory
+    , parsec
+    , vector
   default-language: Haskell2010
 
 executable haskell-examples-exe
@@ -48,7 +55,12 @@ executable haskell-examples-exe
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , bytestring
+    , cassava
+    , directory
     , haskell-examples
+    , parsec
+    , vector
   default-language: Haskell2010
 
 test-suite haskell-examples-test
@@ -63,5 +75,10 @@ test-suite haskell-examples-test
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , bytestring
+    , cassava
+    , directory
     , haskell-examples
+    , parsec
+    , vector
   default-language: Haskell2010

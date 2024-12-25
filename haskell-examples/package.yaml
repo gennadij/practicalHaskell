@@ -2,9 +2,9 @@ name:                haskell-examples
 version:             0.1.0.0
 github:              "githubuser/haskell-examples"
 license:             BSD-3-Clause
-author:              "Author name here"
+author:              "Gennadi Heimann"
 maintainer:          "example@example.com"
-copyright:           "2024 Author name here"
+copyright:           "2024 Gennadi Heimann"
 
 extra-source-files:
 - README.md
@@ -21,6 +21,13 @@ description:         Please see the README on GitHub at <https://github.com/gith
 
 dependencies:
 - base >= 4.7 && < 5
+#- graphite
+#- algebraic-graphs
+- cassava
+- bytestring
+- vector
+- directory
+- parsec
 
 ghc-options:
 - -Wall
