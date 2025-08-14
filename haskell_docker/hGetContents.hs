@@ -16,18 +16,24 @@ extactLine l = endBy ";" l
 extractLines :: [[String]]
 extractLines = map extactLine getTestString 
 
-extractLinesFromFile :: String -> IO [[String]]
+extractLinesFromFile :: String -> IO ()
 extractLinesFromFile fileName = do
     contents <- readFile fileName
     let linesOfContents = lines contents
         extractedLines = map extactLine linesOfContents
-        removeAtPositions = dropPCollumsAtPositions [0, 2] extractedLines
-    return removeAtPositions
+        removeAtPositions = dropPCollumsAtPositions [1] extractedLines
+        collectedNewCSV = collectCSV removeAtPositions
+    writeFile "updated.csv" collectedNewCSV
+    -- return collectedNewCSV
 
 dropPCollumsAtPositions :: [Int] ->  [[String]] -> [[String]]
 dropPCollumsAtPositions positions rows = map (removePositions positions) rows
     where
         removePositions pos row = [x | (i, x) <- zip [0..] row, not (i `elem` pos)]
 
--- collectCSV :: [[String]]-> [String]
--- collectCSV :: 
+collectCSV :: [[String]] -> String 
+collectCSV xs = addNewLine ( map addSimicolon xs )
+    where
+        addSimicolon xs = concatMap (++ ";") xs
+        addNewLine xs = concatMap (++ "\n") xs
+        
