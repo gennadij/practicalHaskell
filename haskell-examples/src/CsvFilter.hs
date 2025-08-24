@@ -1,13 +1,15 @@
-module CsvFilter (getCollumsFiltered, getAllColumn) where
+module CsvFilter (getCollumsFiltered, getAllColumn, backTransformColumn) where
 
 import Data.List (transpose)
 
--- map (\lx -> filter (\x -> head x == lx) l) f
-getCollumsFiltered :: [[String]] -> [String] -> [[[String]]]
-getCollumsFiltered lx = map (\f -> filter(\l -> head l == f) lx )
+getCollumsFiltered :: [[String]] -> [String] -> [[String]]
+getCollumsFiltered lx = map (head . (\f -> filter (\l -> head l == f) lx ))
 
 getAllColumn :: [[String]] -> Int -> [[String]]
 getAllColumn l n = transpose (drop n l)
+
+backTransformColumn :: [[String]] -> [[String]]
+backTransformColumn = transpose
 
 -- getCollumsFiltered :: [[String]] -> [String] -> [[String]]
 -- getCollumsFiltered l f = filter (\x -> head x == head f) l

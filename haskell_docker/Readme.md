@@ -1,4 +1,4 @@
-### Install split lib
+### Install split lib after containers start
 `cabal install --lib --package-env . split`
 
 ### Beispiel für DKB Auszug/Export CSV

@@ -39,7 +39,8 @@ updateCsv inFile outFile columnsToDelete rowsToDelete = do
         extractedLines = map extactLine linesOfContents
         removedRowsAtPositions = dropRowsAtPositions rowsToDelete extractedLines
         removedColumsAtPositions = dropCollumsAtPositions columnsToDelete removedRowsAtPositions
-        collectedNewCSV = collectCSV removedColumsAtPositions
+        reveresedColumns = reverseCollumns removedColumsAtPositions
+        collectedNewCSV = collectCSV reveresedColumns
     writeFile outFile collectedNewCSV
 
 dropCollumsAtPositions :: [Int] ->  [[String]] -> [[String]]
@@ -58,6 +59,9 @@ collectCSV xs = addNewLine ( map addSimicolon xs )
 
 extactLine :: String -> [String]
 extactLine l = endBy ";" l
+
+reverseCollumns :: [[String]] -> [[String]]
+reverseCollumns = reverse
 
 ----------------------------------------------------------------------------
 extractLinesFromFile :: String -> IO ()

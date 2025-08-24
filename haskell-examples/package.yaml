@@ -28,6 +28,7 @@ dependencies:
 - vector
 - directory
 - parsec
+- hspec
 
 ghc-options:
 - -Wall
